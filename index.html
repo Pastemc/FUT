@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation 360 | Soccer & Life Program</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #c41e3a;
+            --primary-dark: #a01729;
+            --secondary: #1a1a1a;
+            --accent: #f0b323;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --gray: #6c757d;
+            --dark-gray: #343a40;
+            --success: #28a745;
+        }
+
+        [data-theme="dark"] {
+            --white: #1a1a1a;
+            --light-gray: #2d2d2d;
+            --secondary: #f8f9fa;
+            --gray: #adb5bd;
+            --dark-gray: #e9ecef;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--secondary);
+            background: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .logo-subtitle {
+            font-size: 0.7rem;
+            color: var(--gray);
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .control-btn {
+            background: transparent;
+            border: 2px solid var(--light-gray);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            min-height: 90vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        [data-theme="dark"] .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .hero-content {
+            padding: 4rem;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(196, 30, 58, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            animation: slideInUp 1s ease;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 .highlight {
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-text {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            max-width: 550px;
+            animation: slideInUp 1.2s ease;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: slideInUp 1.4s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(196, 30, 58, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--secondary);
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: relative;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        .hero-player {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Stats */
+        .stats {
+            background: var(--secondary);
+            color: white;
+            padding: 3rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        /* Section Title */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .pillar {
+            background: var(--white);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--light-gray);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: var(--primary);
+            transition: height 0.3s ease;
+        }
+
+        .pillar:hover::before {
+            height: 100%;
+        }
+
+        .pillar:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .pillar-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(196, 30, 58, 0.1);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .pillar p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            align-items: start;
+        }
+
+        .timeline-time {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+        }
+
+        .timeline-content {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            border-color: var(--primary);
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content p {
+            color: var(--gray);
+        }
+
+        /* Services */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .service {
+            background: var(--white);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--light-gray);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            transition: height 0.3s ease;
+            z-index: 0;
+        }
+
+        .service:hover::before {
+            height: 100%;
+        }
+
+        .service:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .service:hover .service-icon,
+        .service:hover h3,
+        .service:hover p {
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .service h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .service p {
+            color: var(--gray);
+            line-height: 1.8;
+            transition: all 0.3s ease;
+        }
+
+        /* Results */
+        .results-bg {
+            background: var(--light-gray);
+            padding: 5rem 2rem;
+            margin: 5rem 0;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .result {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .result:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .result i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .result span {
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        /* Form */
+        .form-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 5rem 2rem;
+            margin: 5rem 0;
+        }
+
+        .form-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+        }
+
+        .form-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .form-text {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.1);
+        }
+
+        .form-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+        }
+
+        .form-submit:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(196, 30, 58, 0.4);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Map */
+        .map-section {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid var(--light-gray);
+            margin-bottom: 3rem;
+        }
+
+        .map-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .map-address {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .cities {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .city {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .city:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .city-name {
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .city-time {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social a {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 1.5rem 0;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .footer-copy {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image {
+                display: none;
+            }
+
+            .pillars,
+            .services {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .pillars,
+            .services,
+            .results,
+            .cities {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero-content {
+                padding: 2rem;
+            }
+
+            .form-wrapper {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo-section">
+                <img src="logo.jpeg" alt="Formation 360" class="logo-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23c41e3a%22/%3E%3Ctext x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2230%22 font-weight=%22bold%22%3EF360%3C/text%3E%3C/svg%3E'">
+                <div class="logo-text">
+                    <div class="logo-title">FORMATION 360</div>
+                    <div class="logo-subtitle">SOCCER & LIFE PROGRAM</div>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#about" class="nav-link" data-es="Filosofía" data-en="Philosophy">Filosofía</a>
+                <a href="#program" class="nav-link" data-es="Programa" data-en="Program">Programa</a>
+                <a href="#services" class="nav-link" data-es="Servicios" data-en="Services">Servicios</a>
+                <a href="#form" class="nav-link" data-es="Contacto" data-en="Contact">Contacto</a>
+            </div>
+            <div class="nav-controls">
+                <button class="control-btn" onclick="toggleLanguage()">
+                    <span id="lang-icon">EN</span>
+                </button>
+                <button class="control-btn" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+            <button class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-award"></i>
+                <span data-es="Programa Certificado" data-en="Certified Program">Programa Certificado</span>
+            </div>
+            <div class="hero-label" data-es="\ FORMATION 360 \" data-en="\ FORMATION 360 \">\ FORMATION 360 \</div>
+            <h1>
+                <span data-es="FÚTBOL CON" data-en="SOCCER WITH">FÚTBOL CON</span><br>
+                <span class="highlight" data-es="PROPÓSITO" data-en="PURPOSE">PROPÓSITO</span>
+            </h1>
+            <p class="hero-text" data-es="No solo entrenamos futbolistas. Formamos jóvenes fuertes mentalmente, disciplinados y preparados para la vida."
+               data-en="We don't just train soccer players. We develop mentally strong, disciplined young people prepared for life.">
+                No solo entrenamos futbolistas. Formamos jóvenes fuertes mentalmente, disciplinados y preparados para la vida.
+            </p>
+            <div class="hero-buttons">
+                <a href="#form" class="btn-primary">
+                    <i class="fas fa-calendar-check"></i>
+                    <span data-es="Clase Gratuita" data-en="Free Trial">Clase Gratuita</span>
+                </a>
+                <a href="#about" class="btn-secondary">
+                    <span data-es="Conocer Más" data-en="Learn More">Conocer Más</span>
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.3'/%3E%3Cstop offset='100%25' style='stop-color:%23ffffff;stop-opacity:0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cellipse cx='200' cy='500' rx='60' ry='15' fill='rgba(0,0,0,0.2)'/%3E%3Ccircle cx='200' cy='100' r='40' fill='url(%23g)'/%3E%3Cellipse cx='200' cy='220' rx='50' ry='80' fill='url(%23g)'/%3E%3Cellipse cx='200' cy='350' rx='45' ry='90' fill='url(%23g)'/%3E%3Ccircle cx='200' cy='480' r='35' fill='url(%23g)'/%3E%3C/svg%3E" alt="Player" class="hero-player">
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">360°</div>
+                <div class="stat-label" data-es="Formación Integral" data-en="Comprehensive Training">Formación Integral</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6</div>
+                <div class="stat-label" data-es="Áreas de Desarrollo" data-en="Development Areas">Áreas de Desarrollo</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">60</div>
+                <div class="stat-label" data-es="Minutos por Sesión" data-en="Minutes per Session">Minutos por Sesión</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label" data-es="Personalizado" data-en="Personalized">Personalizado</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="container" id="about">
+        <div class="section-header">
+            <div class="section-label" data-es="NUESTRA FILOSOFÍA" data-en="OUR PHILOSOPHY">NUESTRA FILOSOFÍA</div>
+            <h2 class="section-title" data-es="Tres Pilares Fundamentales" data-en="Three Fundamental Pillars">Tres Pilares Fundamentales</h2>
+            <p class="section-subtitle" data-es="Formación desde el ser humano hacia el deportista" data-en="Training from the human being to the athlete">
+                Formación desde el ser humano hacia el deportista
+            </p>
+        </div>
+
+        <div class="pillars">
+            <div class="pillar">
+                <div class="pillar-number">01</div>
+                <div class="pillar-icon">👤</div>
+                <h3 data-es="SER HUMANO PRIMERO" data-en="HUMAN BEING FIRST">SER HUMANO PRIMERO</h3>
+                <p data-es="Antes que futbolistas, son personas. Todo proceso inicia comprendiendo, escuchando y acompañando a cada jugador en su historia, emociones y sueños."
+                   data-en="Before being soccer players, they are people. Every process begins by understanding, listening to, and accompanying each player in their story, emotions, and dreams.">
+                    Antes que futbolistas, son personas. Todo proceso inicia comprendiendo, escuchando y acompañando a cada jugador en su historia, emociones y sueños.
+                </p>
+            </div>
+
+            <div class="pillar">
+                <div class="pillar-number">02</div>
+                <div class="pillar-icon">⚽</div>
+                <h3 data-es="FORMACIÓN 360°" data-en="360° TRAINING">FORMACIÓN 360°</h3>
+                <p data-es="Educación integral: Técnico • Táctico • Físico • Mental • Emocional • Espiritual (propósito, valores, identidad)."
+                   data-en="Comprehensive education: Technical • Tactical • Physical • Mental • Emotional • Spiritual (purpose, values, identity).">
+                    Educación integral: Técnico • Táctico • Físico • Mental • Emocional • Espiritual (propósito, valores, identidad).
+                </p>
+            </div>
+
+            <div class="pillar">
+                <div class="pillar-number">03</div>
+                <div class="pillar-icon">🤝</div>
+                <h3 data-es="COACHING HORIZONTAL" data-en="HORIZONTAL COACHING">COACHING HORIZONTAL</h3>
+                <p data-es="No dirigimos desde la autoridad, sino desde la cercanía, preguntas poderosas y acompañamiento. El entrenador es facilitador, no juez."
+                   data-en="We don't lead from authority, but from closeness, powerful questions, and accompaniment. The coach is a facilitator, not a judge.">
+                    No dirigimos desde la autoridad, sino desde la cercanía, preguntas poderosas y acompañamiento. El entrenador es facilitador, no juez.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program -->
+    <section class="container" id="program">
+        <div class="section-header">
+            <div class="section-label" data-es="PROGRAMA" data-en="PROGRAM">PROGRAMA</div>
+            <h2 class="section-title" data-es="Estructura de Sesión" data-en="Session Structure">Estructura de Sesión</h2>
+            <p class="section-subtitle" data-es="60 minutos de transformación consciente" data-en="60 minutes of conscious transformation">
+                60 minutos de transformación consciente
+            </p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-time">5<br>min</div>
+                <div class="timeline-content">
+                    <h3 data-es="Círculo de Intención" data-en="Intention Circle">Círculo de Intención</h3>
+                    <p data-es="Establecemos la intención del día con respiración consciente y enfoque mental"
+                       data-en="We set the day's intention with conscious breathing and mental focus">
+                        Establecemos la intención del día con respiración consciente y enfoque mental
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-time">15<br>min</div>
+                <div class="timeline-content">
+                    <h3 data-es="Activación Técnica Consciente" data-en="Conscious Technical Activation">Activación Técnica Consciente</h3>
+                    <p data-es="Control, conducción, pase y golpeo desarrollando autoconciencia en cada movimiento"
+                       data-en="Control, dribbling, passing and shooting developing self-awareness in each movement">
+                        Control, conducción, pase y golpeo desarrollando autoconciencia en cada movimiento
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-time">20<br>min</div>
+                <div class="timeline-content">
+                    <h3 data-es="Juegos Tácticos con Coaching" data-en="Tactical Games with Coaching">Juegos Tácticos con Coaching</h3>
+                    <p data-es="1v1, 2v2, 3v3, 4v4 con preguntas poderosas integrando toma de decisiones"
+                       data-en="1v1, 2v2, 3v3, 4v4 with powerful questions integrating decision-making">
+                        1v1, 2v2, 3v3, 4v4 con preguntas poderosas integrando toma de decisiones
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-time">10<br>min</div>
+                <div class="timeline-content">
+                    <h3 data-es="Físico Emocional por Estaciones" data-en="Emotional Physical by Stations">Físico Emocional por Estaciones</h3>
+                    <p data-es="Estaciones de trabajo con valores: resiliencia, energía y trabajo en equipo"
+                       data-en="Work stations with values: resilience, energy and teamwork">
+                        Estaciones de trabajo con valores: resiliencia, energía y trabajo en equipo
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-time">5<br>min</div>
+                <div class="timeline-content">
+                    <h3 data-es="Visualización y Gratitud" data-en="Visualization and Gratitude">Visualización y Gratitud</h3>
+                    <p data-es="Reflexión personal, agradecimiento y conexión profunda con los sueños"
+                       data-en="Personal reflection, gratitude and deep connection with dreams">
+                        Reflexión personal, agradecimiento y conexión profunda con los sueños
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="container" id="services">
+        <div class="section-header">
+            <div class="section-label" data-es="SERVICIOS" data-en="SERVICES">SERVICIOS</div>
+            <h2 class="section-title" data-es="Lo Que Ofrecemos" data-en="What We Offer">Lo Que Ofrecemos</h2>
+            <p class="section-subtitle" data-es="Formación integral completa para el desarrollo total del jugador" data-en="Complete comprehensive training for total player development">
+                Formación integral completa para el desarrollo total del jugador
+            </p>
+        </div>
+
+        <div class="services">
+            <div class="service">
+                <div class="service-icon">⚽</div>
+                <h3 data-es="Entrenamiento Técnico" data-en="Technical Training">Entrenamiento Técnico</h3>
+                <p data-es="Desarrollo de habilidades reales con atención personalizada y grupos reducidos"
+                   data-en="Development of real skills with personalized attention and small groups">
+                    Desarrollo de habilidades reales con atención personalizada y grupos reducidos
+                </p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">🧠</div>
+                <h3 data-es="Entrenamiento Mental" data-en="Mental Training">Entrenamiento Mental</h3>
+                <p data-es="Confianza, mentalidad competitiva sana y gestión emocional avanzada"
+                   data-en="Confidence, healthy competitive mindset and advanced emotional management">
+                    Confianza, mentalidad competitiva sana y gestión emocional avanzada
+                </p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">💎</div>
+                <h3 data-es="Valores y Carácter" data-en="Values and Character">Valores y Carácter</h3>
+                <p data-es="Disciplina, liderazgo, respeto y resiliencia para toda la vida"
+                   data-en="Discipline, leadership, respect and resilience for life">
+                    Disciplina, liderazgo, respeto y resiliencia para toda la vida
+                </p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">📊</div>
+                <h3 data-es="Seguimiento Personalizado" data-en="Personalized Follow-up">Seguimiento Personalizado</h3>
+                <p data-es="Evaluación continua y planes adaptados al progreso individual"
+                   data-en="Continuous evaluation and plans adapted to individual progress">
+                    Evaluación continua y planes adaptados al progreso individual
+                </p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">👨‍👩‍👧</div>
+                <h3 data-es="Coaching para Padres" data-en="Coaching for Parents">Coaching para Padres</h3>
+                <p data-es="Orientación profesional para apoyar el desarrollo integral de sus hijos"
+                   data-en="Professional guidance to support the comprehensive development of their children">
+                    Orientación profesional para apoyar el desarrollo integral de sus hijos
+                </p>
+            </div>
+
+            <div class="service">
+                <div class="service-icon">🎯</div>
+                <h3 data-es="Sesiones Individuales" data-en="Individual Sessions">Sesiones Individuales</h3>
+                <p data-es="Coaching personal en mentalidad, autoconocimiento y toma de decisiones"
+                   data-en="Personal coaching in mindset, self-awareness and decision-making">
+                    Coaching personal en mentalidad, autoconocimiento y toma de decisiones
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <div class="results-bg">
+        <div class="section-header">
+            <div class="section-label" data-es="RESULTADOS" data-en="RESULTS">RESULTADOS</div>
+            <h2 class="section-title" data-es="Lo Que Lograrás" data-en="What You'll Achieve">Lo Que Lograrás</h2>
+        </div>
+
+        <div class="results">
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Autoconocimiento e inteligencia emocional" data-en="Self-awareness and emotional intelligence">Autoconocimiento e inteligencia emocional</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Cohesión de equipo y cultura positiva" data-en="Team cohesion and positive culture">Cohesión de equipo y cultura positiva</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Potencial maximizado sin barreras" data-en="Maximized potential without barriers">Potencial maximizado sin barreras</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Gestión emocional superior" data-en="Superior emotional management">Gestión emocional superior</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Alta motivación y disciplina" data-en="High motivation and discipline">Alta motivación y disciplina</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Dominio del Estado Flow" data-en="Flow State mastery">Dominio del Estado Flow</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Liderazgo y decisiones efectivas" data-en="Leadership and effective decisions">Liderazgo y decisiones efectivas</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Planificación realista y efectiva" data-en="Realistic and effective planning">Planificación realista y efectiva</span>
+            </div>
+            <div class="result">
+                <i class="fas fa-check-circle"></i>
+                <span data-es="Resiliencia para lograr sueños" data-en="Resilience to achieve dreams">Resiliencia para lograr sueños</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <section class="form-section" id="form">
+        <div class="form-wrapper">
+            <h2 class="form-title" data-es="🎁 Clase de Prueba Gratuita" data-en="🎁 Free Trial Class">🎁 Clase de Prueba Gratuita</h2>
+            <p class="form-text" data-es="Reserva tu plaza ahora. Sin compromiso. Te contactaremos para coordinar tu clase."
+               data-en="Book your spot now. No commitment. We'll contact you to coordinate your class.">
+                Reserva tu plaza ahora. Sin compromiso. Te contactaremos para coordinar tu clase.
+            </p>
+
+            <form id="trialForm">
+                <div class="form-group">
+                    <label class="form-label" data-es="Nombre del Padre/Madre *" data-en="Parent's Name *">Nombre del Padre/Madre *</label>
+                    <input type="text" class="form-input" id="parentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-es="Nombre del Jugador *" data-en="Player's Name *">Nombre del Jugador *</label>
+                    <input type="text" class="form-input" id="playerName" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-es="Edad del Jugador *" data-en="Player's Age *">Edad del Jugador *</label>
+                    <input type="number" class="form-input" id="playerAge" min="4" max="18" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-es="Teléfono / WhatsApp *" data-en="Phone / WhatsApp *">Teléfono / WhatsApp *</label>
+                    <input type="tel" class="form-input" id="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-es="Correo Electrónico *" data-en="Email *">Correo Electrónico *</label>
+                    <input type="email" class="form-input" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-es="Ciudad *" data-en="City *">Ciudad *</label>
+                    <select class="form-select" id="city" required>
+                        <option value="">Seleccione / Select</option>
+                        <option value="Gainesville">Gainesville</option>
+                        <option value="Oakwood">Oakwood (5-10 min)</option>
+                        <option value="Flowery Branch">Flowery Branch (10 min)</option>
+                        <option value="Lula">Lula (15 min)</option>
+                        <option value="Clermont">Clermont (15 min)</option>
+                        <option value="Murrayville">Murrayville (15 min)</option>
+                        <option value="Gillsville">Gillsville (20 min)</option>
+                        <option value="Buford">Buford (20 min)</option>
+                        <option value="Braselton">Braselton (20 min)</option>
+                        <option value="Jefferson">Jefferson (25 min)</option>
+                        <option value="Dawsonville">Dawsonville (25 min)</option>
+                        <option value="Cumming">Cumming (25-30 min)</option>
+                        <option value="Cleveland">Cleveland (25-30 min)</option>
+                        <option value="Cornelia">Cornelia (25-30 min)</option>
+                        <option value="Hoschton">Hoschton (25 min)</option>
+                        <option value="Otra">Otra / Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="form-submit">
+                    <span data-es="🚀 Reservar Ahora" data-en="🚀 Book Now">🚀 Reservar Ahora</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Location -->
+    <section class="container">
+        <div class="section-header">
+            <div class="section-label" data-es="UBICACIÓN" data-en="LOCATION">UBICACIÓN</div>
+            <h2 class="section-title">Gainesville, Georgia · USA</h2>
+        </div>
+
+        <div class="map-section">
+            <h3 class="map-title">📍 3327 Harmony Church Rd, Gainesville, GA 30507</h3>
+            <p class="map-address">
+                <a href="https://www.google.com/maps/place/3327+Harmony+Church+Rd,+Gainesville,+GA+30507" 
+                   target="_blank" 
+                   style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-map-marked-alt"></i> <span data-es="Ver en Google Maps" data-en="View on Google Maps">Ver en Google Maps</span>
+                </a>
+            </p>
+
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3293.8667384717767!2d-83.72607972398655!3d34.25891637303669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88f5fa29e5a3d1b3%3A0x522433abf6363bdf!2s3327%20Harmony%20Church%20Rd%2C%20Gainesville%2C%20GA%2030507!5e0!3m2!1sen!2sus!4v1234567890" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+            <h3 style="text-align: center; margin: 3rem 0 2rem; font-size: 1.5rem; font-weight: 700;">
+                <span data-es="🏙️ Ciudades Cercanas" data-en="🏙️ Nearby Cities">🏙️ Ciudades Cercanas</span>
+            </h3>
+
+            <div class="cities">
+                <div class="city"><div class="city-name">Oakwood</div><div class="city-time">5-10 min</div></div>
+                <div class="city"><div class="city-name">Flowery Branch</div><div class="city-time">10 min</div></div>
+                <div class="city"><div class="city-name">Lula</div><div class="city-time">15 min</div></div>
+                <div class="city"><div class="city-name">Clermont</div><div class="city-time">15 min</div></div>
+                <div class="city"><div class="city-name">Murrayville</div><div class="city-time">15 min</div></div>
+                <div class="city"><div class="city-name">Gillsville</div><div class="city-time">20 min</div></div>
+                <div class="city"><div class="city-name">Buford</div><div class="city-time">20 min</div></div>
+                <div class="city"><div class="city-name">Braselton</div><div class="city-time">20 min</div></div>
+                <div class="city"><div class="city-name">Jefferson</div><div class="city-time">25 min</div></div>
+                <div class="city"><div class="city-name">Dawsonville</div><div class="city-time">25 min</div></div>
+                <div class="city"><div class="city-name">Cumming</div><div class="city-time">25-30 min</div></div>
+                <div class="city"><div class="city-name">Cleveland</div><div class="city-time">25-30 min</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="social">
+            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+        </div>
+
+        <p class="footer-text" data-es="Entrena como si ya fueras la persona que sueñas ser. Poco a poco, esa persona despierta."
+           data-en="Train as if you were already the person you dream of being. Little by little, that person awakens.">
+            Entrena como si ya fueras la persona que sueñas ser. Poco a poco, esa persona despierta.
+        </p>
+
+        <p class="footer-copy">
+            © 2024 Formation 360 Soccer & Life Program · Familia Noronha
+        </p>
+    </footer>
+
+    <script>
+        // Navbar Scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load Theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+        });
+
+        // Language Toggle
+        let currentLang = 'es';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            document.getElementById('lang-icon').textContent = currentLang === 'es' ? 'EN' : 'ES';
+            
+            document.querySelectorAll('[data-es]').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else {
+                    el.textContent = text;
+                }
+            });
+
+            localStorage.setItem('language', currentLang);
+        }
+
+        // Load Language
+        document.addEventListener('DOMContentLoaded', () => {
+            const lang = localStorage.getItem('language');
+            if (lang && lang !== 'es') {
+                toggleLanguage();
+            }
+        });
+
+        // Form Submission
+        document.getElementById('trialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = this.querySelector('.form-submit');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLang === 'es' ? 'Enviando...' : 'Sending...');
+
+            const formData = {
+                parentName: document.getElementById('parentName').value,
+                playerName: document.getElementById('playerName').value,
+                playerAge: document.getElementById('playerAge').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                city: document.getElementById('city').value,
+                date: new Date().toLocaleDateString('es-ES'),
+                time: new Date().toLocaleTimeString('es-ES')
+            };
+
+            try {
+                // Generate PDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Header
+                doc.setFillColor(196, 30, 58);
+                doc.rect(0, 0, 210, 50, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(28);
+                doc.setFont(undefined, 'bold');
+                doc.text('FORMATION 360', 105, 25, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.text('Soccer & Life Program', 105, 35, { align: 'center' });
+
+                // Title
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('SOLICITUD DE CLASE DE PRUEBA', 105, 65, { align: 'center' });
+
+                // Content
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                let y = 85;
+
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(196, 30, 58);
+                doc.text('INFORMACION DEL PADRE/MADRE:', 20, y);
+                y += 10;
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Nombre: ${formData.parentName}`, 25, y);
+                y += 8;
+                doc.text(`Email: ${formData.email}`, 25, y);
+                y += 8;
+                doc.text(`Telefono: ${formData.phone}`, 25, y);
+                y += 15;
+
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(196, 30, 58);
+                doc.text('INFORMACION DEL JUGADOR:', 20, y);
+                y += 10;
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Nombre: ${formData.playerName}`, 25, y);
+                y += 8;
+                doc.text(`Edad: ${formData.playerAge} anos`, 25, y);
+                y += 8;
+                doc.text(`Ciudad: ${formData.city}`, 25, y);
+                y += 15;
+
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(196, 30, 58);
+                doc.text('DETALLES:', 20, y);
+                y += 10;
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Fecha: ${formData.date}`, 25, y);
+                y += 8;
+                doc.text(`Hora: ${formData.time}`, 25, y);
+
+                // Footer
+                doc.setFillColor(196, 30, 58);
+                doc.rect(0, 270, 210, 27, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(9);
+                doc.text('3327 Harmony Church Rd, Gainesville, GA 30507', 105, 280, { align: 'center' });
+                doc.text('Formation 360 - Familia Noronha', 105, 286, { align: 'center' });
+
+                // Get PDF as base64
+                const pdfBase64 = doc.output('datauristring').split(',')[1];
+
+                // Email HTML
+                const emailHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; background: white; }
+        .header { background: linear-gradient(135deg, #c41e3a, #a01729); padding: 40px 20px; text-align: center; }
+        .header h1 { color: white; margin: 0; font-size: 32px; }
+        .header p { color: rgba(255,255,255,0.9); margin: 10px 0 0 0; }
+        .content { padding: 40px 30px; }
+        .section { margin-bottom: 30px; }
+        .section h2 { color: #c41e3a; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #c41e3a; padding-bottom: 10px; }
+        .info-row { padding: 10px 0; border-bottom: 1px solid #eee; }
+        .label { font-weight: bold; color: #333; display: inline-block; width: 120px; }
+        .value { color: #666; }
+        .footer { background: #1a1a1a; color: white; padding: 30px; text-align: center; }
+        .note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ NUEVA SOLICITUD</h1>
+            <p>Formation 360 - Soccer & Life Program</p>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2>👤 Información del Padre/Madre</h2>
+                <div class="info-row"><span class="label">Nombre:</span> <span class="value">${formData.parentName}</span></div>
+                <div class="info-row"><span class="label">Email:</span> <span class="value">${formData.email}</span></div>
+                <div class="info-row"><span class="label">Teléfono:</span> <span class="value">${formData.phone}</span></div>
+            </div>
+            
+            <div class="section">
+                <h2>⚽ Información del Jugador</h2>
+                <div class="info-row"><span class="label">Nombre:</span> <span class="value">${formData.playerName}</span></div>
+                <div class="info-row"><span class="label">Edad:</span> <span class="value">${formData.playerAge} años</span></div>
+                <div class="info-row"><span class="label">Ciudad:</span> <span class="value">${formData.city}</span></div>
+            </div>
+            
+            <div class="section">
+                <h2>📅 Detalles de Solicitud</h2>
+                <div class="info-row"><span class="label">Fecha:</span> <span class="value">${formData.date}</span></div>
+                <div class="info-row"><span class="label">Hora:</span> <span class="value">${formData.time}</span></div>
+            </div>
+
+            <div class="note">
+                <strong>📎 Nota:</strong> El PDF adjunto contiene todos los detalles de la solicitud.
+            </div>
+        </div>
+        <div class="footer">
+            <p style="margin: 0 0 10px 0;">Formation 360 Soccer & Life Program</p>
+            <p style="margin: 0; opacity: 0.8; font-size: 14px;">3327 Harmony Church Rd, Gainesville, GA 30507</p>
+            <p style="margin: 10px 0 0 0; opacity: 0.7; font-size: 13px;">Familia Noronha</p>
+        </div>
+    </div>
+</body>
+</html>
+                `;
+
+                // Send Email with SMTP.js
+                await Email.send({
+                    SecureToken: "hrqf blvy ujbu spcd",
+                    To: 'claude271109@gmail.com',
+                    From: 'claude271109@gmail.com',
+                    Subject: `⚽ Nueva Solicitud Formation 360 - ${formData.playerName}`,
+                    Body: emailHTML,
+                    Attachments: [{
+                        name: `Formation360_${formData.playerName.replace(/\s+/g, '_')}_${Date.now()}.pdf`,
+                        data: pdfBase64
+                    }]
+                });
+
+                // Success
+                Swal.fire({
+                    icon: 'success',
+                    title: currentLang === 'es' ? '¡Solicitud Enviada!' : 'Request Sent!',
+                    html: currentLang === 'es' 
+                        ? `<p>¡Gracias <strong>${formData.parentName}</strong>!</p><p>Hemos recibido tu solicitud para <strong>${formData.playerName}</strong>.</p><p>Te contactaremos pronto para coordinar la clase de prueba gratuita.</p>`
+                        : `<p>Thank you <strong>${formData.parentName}</strong>!</p><p>We've received your request for <strong>${formData.playerName}</strong>.</p><p>We'll contact you soon to coordinate the free trial class.</p>`,
+                    confirmButtonColor: '#c41e3a',
+                    confirmButtonText: currentLang === 'es' ? '¡Perfecto!' : 'Perfect!'
+                });
+
+                this.reset();
+
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: currentLang === 'es' ? 'Error al Enviar' : 'Sending Error',
+                    text: currentLang === 'es' 
+                        ? 'Hubo un problema al enviar tu solicitud. Por favor, intenta nuevamente o contáctanos directamente por WhatsApp.'
+                        : 'There was a problem sending your request. Please try again or contact us directly via WhatsApp.',
+                    confirmButtonColor: '#c41e3a'
+                });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            }
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
